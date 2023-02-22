@@ -2,7 +2,9 @@
 [ -z "$PS1" ] && return
 
 # Don't put duplicate lines in the history and do not add lines that start with a space
-HISTCONTROL=erasedups:ignoredups:ignorespace
+# I want to see if turning off dups will allow me to always have my commands duplicated on every new terminal
+#HISTCONTROL=erasedups:ignoredups:ignorespace
+HISTCONTROL=ignorespace
 
 # Ignore history, ls, ps, and exit commands in history file
 HISTIGNORE="&:history;ls:ls * ps:ps -A:[bf]g:exit"
@@ -148,6 +150,7 @@ if [ -x /usr/bin/dircolors ]; then
 	alias grep='grep --color=auto'
 	alias fgrep='fgrep --color=auto'
 	alias egrep='egrep --color=auto'
+	alias diff='diff --color=auto'
 fi
 
 # Alias for quick directory moving
@@ -160,6 +163,10 @@ alias .....="cd ../../../.."
 alias exi="exit"
 alias exti="exit"
 alias xit="exit"
+
+# Alias for Git committing and pushing
+alias gitc="git add . && git commit -m" # + commit message
+alias gitp="git push" # + remote & branch names
 
 # Changes dir color in terminal or tty (30:black, 31:red, 32:green, 33:yellow, 34:blue, 35:purple, 36:cyan, 37:white)
 # Use di=1;4;33 to make directories (1) bold, (4) underlined, and (33) yellow
@@ -175,5 +182,4 @@ mvg ()
     fi
 }
 
-#screenfetch -E
 neofetch --colors 129 7 129 129 7 7 --ascii_colors 129 129 --ascii_distro arch --color_blocks off
