@@ -1,41 +1,42 @@
-#### My Bash Config
-
-```bash
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
-# dont put duplicate lines in the history and do not add lines that start with a space
-HISTCONTROL=erasedups:ignoredups:ignorespace
+export VISUAL=vim
+export EDITOR="$VISUAL"
+
+# Don't put duplicate lines in the history and do not add lines that start with a space
+# I want to see if turning off dups will allow me to always have my commands duplicated on every new terminal
+#HISTCONTROL=erasedups:ignoredups:ignorespace
+HISTCONTROL=ignorespace
 
 # Ignore history, ls, ps, and exit commands in history file
 HISTIGNORE="&:history;ls:ls * ps:ps -A:[bf]g:exit"
 
-HISTSIZE=2000
+HISTSIZE=20000
 
 # Keep around 128K lines of history in file
 HISTFILESIZE=131072
 
-# appeneds to history instead of overwriting
+# Appeneds to history instead of overwriting
 shopt -s histappend
 
-# check the window size after each command and, if necessary,
-# update the values of LINES and COLUMNS.
+# Check the window size after each command and, if necessary,
+# Update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-# lists any stopped or running jobs before exiting. requires two exits
+# Lists any stopped or running jobs before exiting. requires two exits
 shopt -s checkjobs
 
-# use extra globbing features.ie !(foo), ?(bar|baz)...  See man bash, search extglob
+# Use extra globbing features.ie !(foo), ?(bar|baz)...  See man bash, search extglob
 shopt -s extglob
 
-# include .files when globbing or pattern matching
+# Include .files when globbing or pattern matching
 shopt -s dotglob
 
-# when a glob expands to nothing, make it an empty string instead of the literal characters
-
+# When a glob expands to nothing, make it an empty string instead of the literal characters
 shopt -s nullglob
 
-# fix spelling errors for cd, only in interactive shell
+# Fix spelling errors for cd, only in interactive shell
 shopt -s cdspell
 
 # Fix small errors in directory names during completion
@@ -47,7 +48,7 @@ shopt -s checkhash
 # Allow double-start globs to match files and recursive paths
 shopt -s globstar
 
-# auto change directory
+# Auto change directory
 shopt -s autocd
 
 # Don't assume a word with a @ in it is a hostname
@@ -59,7 +60,7 @@ shopt -s no_empty_cmd_completion
 # Use programmable completion, if available
 shopt -s progcomp
 
-# protects from accidentally destroy content with the redirect (>) command. ie echo "test" > whatever.txt. Should be overwritable using >|. ie echo "test" >| whatever.txt.
+# Protects from accidentally destroy content with the redirect (>) command. ie echo "test" > whatever.txt. Should be overwritable using >|. ie echo "test" >| whatever.txt.
 set -o noclobber
 
 s() { # do sudo, or sudo the last command if no arguments given
@@ -70,19 +71,18 @@ s() { # do sudo, or sudo the last command if no arguments given
     fi
 }
 
-# set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
-fi
+# Set variable identifying the chroot you work in (used in the prompt below)
+# I don't think this is needed in an Arch build
+#if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
+#    debian_chroot=$(cat /etc/debian_chroot)
+#fi
 
-# set a fancy prompt (non-color, unless we know we "want" color)
+# Set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
     xterm-color) color_prompt=yes;;
 esac
 
-# uncomment for a colored prompt, if the terminal has the capability; turned
-# off by default to not distract the user: the focus in a terminal window
-# should be on the output of commands, not on the prompt
+# Force color
 force_color_prompt=yes
 
 if [ -n "$force_color_prompt" ]; then
@@ -96,15 +96,16 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
-# set a fancy prompt (non-color, overwrite the one in /etc/profile)
-if [ "$color_prompt" = yes ]; then
-	PS1='${debian_chroot:+($debian_chroot)}\[\033[01;30m\]\u@\h\[\033[00m\]:\[\033[01;30m\]\w\[\033[00m\]\$ '
+# NEW!!! Based off of Manjaro. Set color RED for root and a different color for user
+if [[ ${EUID} == 0 ]]; then
+	PS1='\[\033[01;31m\]\u@\h\[\033[00m\]:\[\033[01;31m\]\w\[\033[00m\]\$ '
 else
-	PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u@\h\[\033[00m\]:\[\033[01;31m\]\w\[\033[00m\]\$ '
+    PS1='\[\033[01;30m\]\u@\h\[\033[00m\]:\[\033[01;30m\]\w\[\033[00m\]\$ '
 fi
+
 unset color_prompt force_color_prompt
 
-# enable bash completion in interactive shells
+# Enable bash completion in interactive shells
 if ! shopt -oq posix; then
   if [ -f /usr/share/bash-completion/bash_completion ]; then
     . /usr/share/bash-completion/bash_completion
@@ -113,7 +114,7 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# sudo hint
+# Sudo hint
 if [ ! -e "$HOME/.sudo_as_admin_successful" ] && [ ! -e "$HOME/.hushlogin" ] ; then
     case " $(groups) " in *\ admin\ *)
     if [ -x /usr/bin/sudo ]; then
@@ -126,10 +127,10 @@ if [ ! -e "$HOME/.sudo_as_admin_successful" ] && [ ! -e "$HOME/.hushlogin" ] ; t
     esac
 fi
 
-# if the command-not-found package is installed, use it
+# If the command-not-found package is installed, use it
 if [ -x /usr/lib/command-not-found -o -x /usr/share/command-not-found/command-not-found ]; then
 	function command_not_found_handle {
-	        # check because c-n-f could've been removed in the meantime
+	        # Check because c-n-f could've been removed in the meantime
                 if [ -x /usr/lib/command-not-found ]; then
 		   /usr/lib/command-not-found -- "$1"
                    return $?
@@ -152,19 +153,26 @@ if [ -x /usr/bin/dircolors ]; then
 	alias grep='grep --color=auto'
 	alias fgrep='fgrep --color=auto'
 	alias egrep='egrep --color=auto'
+	alias diff='diff --color=auto'
 fi
 
+# Alias for quick directory moving
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 
-# alias to exit due to my fat fingering
+# Alias for exit due to my fat fingering
 alias exi="exit"
 alias exti="exit"
+alias xit="exit"
+
+# Alias for Git committing and pushing
+alias gitc="git add . && git commit -m" # + commit message
+alias gitp="git push" # + remote & branch names
 
 # Changes dir color in terminal or tty (30:black, 31:red, 32:green, 33:yellow, 34:blue, 35:purple, 36:cyan, 37:white)
-# Use di=1;4;33 to make it (1) bold, (4) underlined, and (33) yellow
+# Use di=1;4;33 to make directories (1) bold, (4) underlined, and (33) yellow
 LS_COLORS="di=1;33"
 
 # move and go to the directory
@@ -177,5 +185,4 @@ mvg ()
     fi
 }
 
-screenfetch 
-```
+neofetch --colors 129 7 129 129 7 7 --ascii_colors 129 129 --ascii_distro arch --color_blocks off
