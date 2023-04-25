@@ -1,3 +1,6 @@
+#### My .bashrc config
+
+```bash
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
@@ -186,3 +189,4 @@ mvg ()
 }
 
 neofetch --colors 129 7 129 129 7 7 --ascii_colors 129 129 --ascii_distro arch --color_blocks off
+```
