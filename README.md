@@ -1,5 +1,7 @@
 #### My .bashrc config
 
+What my terminal looks like: ![screenshots/neofetch.png](screenshots/neofetch.png)
+
 ```bash
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
