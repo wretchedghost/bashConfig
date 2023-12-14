@@ -13,6 +13,8 @@
 
 What my terminal looks like: ![screenshots/neofetch.png](screenshots/neofetch.png)
 
-#### To use: replace your ~/.bashrc and /root/.bashrc with the .bashrc file to have your terminal look like mine. 
+#### To use: replace your ~/.bashrc and /root/.bashrc with the .bashrc file to have your terminal look like mine then run:
+
+> $ source ~/.bashrc
 
 What my root terminal looks like: ![screenshots/neofetch_root.png](screenshots/neofetch_root.png)
